@@ -1,0 +1,5 @@
+langchain_community
+pypdf
+langchain_ollama
+langchain_google_genai
+langchain
