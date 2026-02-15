@@ -13,6 +13,27 @@ class IdeaValidationAgent:
 
 
 
+    @tool
+    def check_market_trends():
+        pass
+
+    @tool
+    def lookup_competitors():
+        pass
+
+
+    @tool
+    def score_feasibility():
+        pass
+
+    @tool
+    def validate_survey_responses():
+        pass
+
+    
+
+
+
     
     
 
