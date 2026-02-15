@@ -1,21 +1,14 @@
-from unittest.mock import Base
 from langchain.agents import create_agent
-from langchain.messages import HumanMessage, SystemMessage
+from langchain.messages import SystemMessage
 from langchain.tools import tool
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents.structured_output import ToolStrategy
-from pydantic import BaseModel,Field
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
-
-
-class OutputFormat(BaseModel):
-    pass
-
 class IdeaValidationAgent:
-    def __init__(self, model, system_prompt,output_format):
+    def __init__(self, model, system_prompt, output_format):
         self.system_prompt = SystemMessage("")
         self.tools = [
             self._check_market_trends,
@@ -25,8 +18,15 @@ class IdeaValidationAgent:
         ]
 
         self.agent = create_agent(
-            model=model, system_prompt=system_prompt, tools=self.tools,response_format=ToolStrategy(output_format)
+            model=model,
+            system_prompt=system_prompt,
+            tools=self.tools,
+            response_format=ToolStrategy(output_format),
         )
+
+
+    def validate_idea(self):
+        pass
 
     @tool
     def _check_market_trends(self):
