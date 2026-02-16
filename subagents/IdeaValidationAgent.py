@@ -1,32 +1,30 @@
 from langchain.agents import create_agent
-from langchain.messages import SystemMessage
 from langchain.tools import tool
-from langchain.agents.structured_output import ToolStrategy
 from dotenv import load_dotenv
+from config import IdeaValidationAgentConfig
+from langchain.messages import HumanMessage
 
 load_dotenv()
 
 
 class IdeaValidationAgent:
-    def __init__(self, model, system_prompt, output_format):
-        self.system_prompt = SystemMessage("")
-        self.tools = [
-            self._check_market_trends,
-            self._lookup_competitors,
-            self._score_feasibility,
-            self._validate_survey_responses,
-        ]
-
-        self.agent = create_agent(
-            model=model,
-            system_prompt=system_prompt,
-            tools=self.tools,
-            response_format=ToolStrategy(output_format),
+    def __init__(self):
+        self._config = IdeaValidationAgentConfig()
+        self._agent = create_agent(
+            model=self._config.model,
+            system_prompt=self._config.system_prompt,
+            # tools=[
+            #     self._check_market_trends,
+            #     self._lookup_competitors,
+            #     self._score_feasibility,
+            #     self._validate_survey_responses,
+            # ],
+            response_format=self._config.response_format,
         )
 
-
     def validate_idea(self):
-        pass
+        idea = input("Enter your idea")
+        return self._agent.invoke({"messages": [HumanMessage(f"my idea {idea}")]})
 
     @tool
     def _check_market_trends(self):
@@ -74,3 +72,6 @@ class IdeaValidationAgent:
         - add resources (for RAG)
         """
         pass
+
+
+print(IdeaValidationAgent().validate_idea())
