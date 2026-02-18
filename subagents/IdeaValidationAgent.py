@@ -43,15 +43,17 @@ class IdeaValidationAgent:
             {"messages": [HumanMessage(f"my idea {user_prompt}")]}, config
         )
 
+    @staticmethod
     @tool
-    def _check_market_trends(self, trends: str | None) -> str:
+    def _check_market_trends(trends: str | None) -> str:
         """ "Use this tool to get market trends"""
-        return f"Market Trends {trends}" if trends else "No Trends"
+        return f"Market Trends {trends}" if trends else "No Market Trends"
 
+    @staticmethod
     @tool
-    def _lookup_competitors(self, competitors: str | None) -> str:
+    def _lookup_competitors(competitors: str | None) -> str:
         """use this tool to get market competitors"""
-        return f"Market Trends {competitors}" if competitors else "No Trends"
+        return f"Market competitors {competitors}" if competitors else "No Market competitors"
 
 
 if __name__ == "__main__":
