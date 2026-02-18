@@ -27,13 +27,9 @@ class IdeaValidationAgentConfig:
         system_prompt: SystemMessage | None = None,
     ):
         self.model = model or ChatGoogleGenerativeAI(model="gemini-2.5-flash")
-
         self.system_prompt = system_prompt or SystemMessage(
             "You are an idea validation agent. "
             "Return concise, structured output only."
         )
-
+        
         self.response_format = ToolStrategy(IdeaValidationOutput)
-
-
-
