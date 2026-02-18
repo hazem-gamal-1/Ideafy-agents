@@ -6,8 +6,6 @@ from typing import Literal
 
 
 class IdeaValidationOutput(BaseModel):
-    decision: Literal["proceed", "iterate", "reject"]
-
     market_score: float = Field(ge=0, le=10)
     competition_score: float = Field(ge=0, le=10)
     feasibility_score: float = Field(ge=0, le=10)
@@ -17,7 +15,6 @@ class IdeaValidationOutput(BaseModel):
     next_steps: list[str] = Field(..., max_items=3)
 
     confidence: float = Field(..., ge=0, le=1)
-    iteration: int
 
 
 class IdeaValidationAgentConfig:
