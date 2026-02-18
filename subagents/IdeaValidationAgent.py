@@ -41,14 +41,11 @@ class IdeaValidationAgent:
         )
 
     @tool
-    def _check_market_trends(self, trends):
-
+    def _check_market_trends(trends):
+        """ "Use this tool to get market trends"""
         return f"Market Trends {trends}" if trends else "No Trends"
 
     @tool
-    def _lookup_competitors(self, competitors):
-
+    def _lookup_competitors(competitors):
+        """use this tool to get market competitors"""
         return f"Market Trends {competitors}" if competitors else "No Trends"
-
-
-print(IdeaValidationAgent().validate_idea())
