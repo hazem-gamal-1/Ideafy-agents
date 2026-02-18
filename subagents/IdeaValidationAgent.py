@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from config import IdeaValidationAgentConfig
 from langchain.messages import HumanMessage
 from langchain.agents.middleware import HumanInTheLoopMiddleware
+from langgraph.checkpoint.memory import InMemorySaver
 
 load_dotenv()
 
@@ -33,19 +34,26 @@ class IdeaValidationAgent:
                 )
             ],
             response_format=self._config.response_format,
+            checkpointer=InMemorySaver(),
         )
 
-    def validate_idea(self, user_prompt):
+    def validate_idea(self, user_prompt, thread_id="default"):
+        config = {"configurable": {"thread_id": thread_id}}
         return self._main_agent.invoke(
-            {"messages": [HumanMessage(f"my idea {user_prompt}")]}
+            {"messages": [HumanMessage(f"my idea {user_prompt}")]}, config
         )
 
     @tool
-    def _check_market_trends(trends):
+    def _check_market_trends(self, trends: str | None) -> str:
         """ "Use this tool to get market trends"""
         return f"Market Trends {trends}" if trends else "No Trends"
 
     @tool
-    def _lookup_competitors(competitors):
+    def _lookup_competitors(self, competitors: str | None) -> str:
         """use this tool to get market competitors"""
         return f"Market Trends {competitors}" if competitors else "No Trends"
+
+
+if __name__ == "__main__":
+    agent = IdeaValidationAgent()
+    print(agent.validate_idea("my start up idea is car washer"))
