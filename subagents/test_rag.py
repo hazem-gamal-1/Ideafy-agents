@@ -1,29 +1,26 @@
 import chromadb
-from chromadb.utils import embedding_functions
-from chromadb.config import Settings
+from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 
+# Use PersistentClient for on-disk storage
+client = chromadb.PersistentClient(path="./chroma_db")
 
-client = chromadb.Client(
-    Settings(persist_directory="./chroma_db")  # this folder will store your database
-)
-embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
-    model_name="all-MiniLM-L6-v2"
-)
+embedding_function = SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
 
-collection = client.create_collection(
+# get_or_create_collection avoids errors on re-runs
+collection = client.get_or_create_collection(
     name="docs", embedding_function=embedding_function
 )
 
-
 collection.add(
-    ids=["1", "2", "3"],
+    ids=["1", "2", "3","4"],
     documents=[
         "Chroma is an open-source vector database",
         "Vector databases store embeddings",
         "RAG uses vector search with LLMs",
+        "my name is hazem",
     ],
-    metadatas=[{"topic": "chroma"}, {"topic": "vector-db"}, {"topic": "rag"}],
 )
-results = collection.query(query_texts=["What is a vector database?"], n_results=1)
+
+results = collection.query(query_texts=["What is your name ?"], n_results=1)
 
 print(results["documents"])

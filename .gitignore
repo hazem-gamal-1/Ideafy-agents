@@ -1,1 +1,6 @@
 .env
+chroma_db/chroma.sqlite3
+chroma_db/8f6f62f8-01be-42f4-af46-89587d8eeedf/data_level0.bin
+chroma_db/8f6f62f8-01be-42f4-af46-89587d8eeedf/link_lists.bin
+chroma_db/8f6f62f8-01be-42f4-af46-89587d8eeedf/length.bin
+chroma_db/8f6f62f8-01be-42f4-af46-89587d8eeedf/header.bin
