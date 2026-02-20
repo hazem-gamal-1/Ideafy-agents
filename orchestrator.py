@@ -1,32 +1,39 @@
-from click import prompt
 from langchain.agents import create_agent
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain.messages import HumanMessage
 from dotenv import load_dotenv
 from langchain.tools import tool
+from subagents.idea_validation_agent import IdeaValidationAgent
+from subagents.legal_agent import LegalAgent
+from subagents.swot_analyzer_agent import SWOTAnalyzerAgent
 load_dotenv()
 
 class OrchestratorAgent:
     def __init__(self,config):
         self._config = config
-        self._main_agent = create_agent(
+        self._orchestratorAgent = create_agent(
             model=self._config.model,
             system_prompt=self._config.system_prompt,
             response_format=self._config.response_format,
             checkpointer=InMemorySaver(),
         )
+        self._idea_validation_agent=IdeaValidationAgent(self._config.validation_onfig)
+        self._legal_agent=LegalAgent(self._config.legal_config)
+        self._swot_agent=SWOTAnalyzerAgent(self._config.swot_config)
 
 
     @staticmethod
     @tool
     def _run_idea_validation_agent(self,prompt):
         """Run the Idea Validation Agent."""
+        return self._idea_validation_agent.validate_idea(prompt,self._config.thread_id)
         
 
     @staticmethod
     @tool
     def _run_legal_agent(self,prompt):
         """ Run the Legal Agent to identify potential legal risks."""
+        return self._legal_agent.analyze_legal_risks(prompt,self._config.thread_id)
 
 
 
@@ -34,11 +41,11 @@ class OrchestratorAgent:
     @tool
     def _run_swot_analyzer_agent(self,prompt):
         """ Run the SWOT Analyzer Agent to assess strategic positioning."""
+        return self._swot_agent.run_scenario_analysis(prompt,self._config.thread_id)
 
 
-    def run(self,thread_id="default"):
-        config = {"configurable": {"thread_id": thread_id}}
-        prompt=" "
+    def run(self,prompt):
+        config = {"configurable": {"thread_id": self._config.thread_id}}
         result=self._main_agent.invoke(
             {"messages": [HumanMessage(f"{prompt}")]}, config
         )
@@ -47,3 +54,5 @@ class OrchestratorAgent:
 
 
 
+if __name__=="__main__":
+    pass

@@ -111,7 +111,7 @@ class OrchestratorAgentOutput(BaseModel):
 
 
 class OrchestratorAgentConfig:
-    def __init__(self,model=None,system_prompt=None,validation_onfig=None,swot_config=None,legal_config=None):
+    def __init__(self,thread_id,model=None,system_prompt=None,validation_onfig=None,swot_config=None,legal_config=None):
         self.validation_onfig=IdeaValidationAgentConfig()
         self.swot_config=SWOTAnalyzerAgentConfig()
         self.legal_config=LegalAgentConfig()
@@ -132,4 +132,5 @@ class OrchestratorAgentConfig:
                                 "Use the provided tools to call sub-agents when needed."
                             )
         self.response_format=ToolStrategy(OrchestratorAgentOutput)
+        self.thread_id=thread_id
                                     
