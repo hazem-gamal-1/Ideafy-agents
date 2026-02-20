@@ -3,6 +3,7 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langchain.messages import HumanMessage
 from dotenv import load_dotenv
 from langchain.tools import tool
+from config import OrchestratorAgentConfig
 from subagents.idea_validation_agent import IdeaValidationAgent
 from subagents.legal_agent import LegalAgent
 from subagents.swot_analyzer_agent import SWOTAnalyzerAgent
@@ -55,4 +56,6 @@ class OrchestratorAgent:
 
 
 if __name__=="__main__":
-    pass
+
+    result=OrchestratorAgent(OrchestratorAgentConfig("1")).run("car washing")
+    print(result)
