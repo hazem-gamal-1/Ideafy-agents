@@ -14,7 +14,7 @@ class OrchestratorAgent:
         self._config = config
         self._orchestrator_agent = create_agent(
             model=self._config.model,
-            tools=[self._run_idea_validation_agent,self._run_swot_analyzer_agent,self._run_legal_agent]
+            tools=[tool(self._run_idea_validation_agent),tool(self._run_swot_analyzer_agent),tool(self._run_legal_agent)]
             ,
             system_prompt=self._config.system_prompt,
             response_format=self._config.response_format,
@@ -25,23 +25,20 @@ class OrchestratorAgent:
         self._swot_agent=SWOTAnalyzerAgent(self._config.swot_config)
 
 
-    @staticmethod
-    @tool
+  
     def _run_idea_validation_agent(self,prompt):
         """Run the Idea Validation Agent."""
         return self._idea_validation_agent.validate_idea(prompt,self._config.thread_id)
         
 
-    @staticmethod
-    @tool
+
     def _run_legal_agent(self,prompt):
         """ Run the Legal Agent to identify potential legal risks."""
         return self._legal_agent.analyze_legal_risks(prompt,self._config.thread_id)
 
 
 
-    @staticmethod
-    @tool
+  
     def _run_swot_analyzer_agent(self,prompt):
         """ Run the SWOT Analyzer Agent to assess strategic positioning."""
         return self._swot_agent.run_scenario_analysis(prompt,self._config.thread_id)
