@@ -49,5 +49,5 @@ class LegalAgentConfig:
             "Return concise, structured output only. "
             "For each legal risk, suggest actionable steps to mitigate or resolve it."
         )
-        self.response_format = ToolStrategy(IdeaValidationOutput)
+        self.response_format = ToolStrategy(LegalAgentOutput)
 
