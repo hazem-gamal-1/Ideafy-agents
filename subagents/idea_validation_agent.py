@@ -1,11 +1,9 @@
 from langchain.agents import create_agent
 from langchain.tools import tool
-from dotenv import load_dotenv
 from langchain.messages import HumanMessage
 from langchain.agents.middleware import HumanInTheLoopMiddleware
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import Command
-load_dotenv()
 
 class IdeaValidationAgent:
     def __init__(self,config):

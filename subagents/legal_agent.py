@@ -1,8 +1,7 @@
 from langchain.agents import create_agent
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain.messages import HumanMessage
-from dotenv import load_dotenv
-load_dotenv()
+
 
 class LegalAgent:
     def __init__(self,config):
