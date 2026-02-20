@@ -6,3 +6,4 @@ langchain
 python-dotenv
 chromadb
 langchain_chroma
+langchain_openai 

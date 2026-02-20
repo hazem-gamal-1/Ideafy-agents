@@ -15,8 +15,8 @@ class IdeaValidationOutput(BaseModel):
 class IdeaValidationAgentConfig:
     def __init__(
         self,
-        model: ChatGoogleGenerativeAI | None = None,
-        system_prompt: SystemMessage | None = None,
+        model = None,
+        system_prompt=None,
     ):
         self.model = model or ChatGoogleGenerativeAI(model="gemini-2.5-flash")
         self.system_prompt = system_prompt or SystemMessage(
