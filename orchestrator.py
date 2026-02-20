@@ -12,8 +12,10 @@ load_dotenv()
 class OrchestratorAgent:
     def __init__(self,config):
         self._config = config
-        self._orchestratorAgent = create_agent(
+        self._orchestrator_agent = create_agent(
             model=self._config.model,
+            tools=[self._run_idea_validation_agent,self._run_swot_analyzer_agent,self._run_legal_agent]
+            ,
             system_prompt=self._config.system_prompt,
             response_format=self._config.response_format,
             checkpointer=InMemorySaver(),
@@ -47,7 +49,7 @@ class OrchestratorAgent:
 
     def run(self,prompt):
         config = {"configurable": {"thread_id": self._config.thread_id}}
-        result=self._main_agent.invoke(
+        result=self._orchestrator_agent.invoke(
             {"messages": [HumanMessage(f"{prompt}")]}, config
         )
         return result['structured_response']
@@ -57,5 +59,5 @@ class OrchestratorAgent:
 
 if __name__=="__main__":
 
-    result=OrchestratorAgent(OrchestratorAgentConfig("1")).run("car washing")
+    result=OrchestratorAgent(OrchestratorAgentConfig("3")).run("car washing")
     print(result)
