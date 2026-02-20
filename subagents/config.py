@@ -1,7 +1,10 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
+
 from langchain.messages import SystemMessage
 from langchain.agents.structured_output import ToolStrategy
 from pydantic import Field, BaseModel
+from langchain_openai import ChatOpenAI
+import os
+
 
 
 class IdeaValidationOutput(BaseModel):
@@ -17,7 +20,12 @@ class IdeaValidationAgentConfig:
         model = None,
         system_prompt=None,
     ):
-        self.model = model or ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+        self.model = model or  ChatOpenAI(
+                        model="gpt-4o",
+                        api_key=os.getenv("GITHUB_TOKEN"),
+                        base_url="https://models.inference.ai.azure.com",
+                        temperature=0.2,
+                    )
         self.system_prompt = system_prompt or SystemMessage(
             "You are an idea validation agent" \
             "Return concise, structured output only."\
@@ -42,7 +50,12 @@ class LegalAgentConfig:
         model = None,
         system_prompt=None
         ):
-        self.model = model or ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+        self.model = model or ChatOpenAI(
+                        model="gpt-4o",
+                        api_key=os.getenv("GITHUB_TOKEN"),
+                        base_url="https://models.inference.ai.azure.com",
+                        temperature=0.2,
+                    )
         self.system_prompt = system_prompt or SystemMessage(
             "You are a legal analysis agent. "
             "Return concise, structured output only. "
@@ -70,7 +83,12 @@ class SWOTAnalyzerAgentOutput(BaseModel):
 
 class SWOTAnalyzerAgentConfig:
     def __init__(self, model=None, system_prompt=None):
-        self.model = model or ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+        self.model = model or ChatOpenAI(
+                        model="gpt-4o",
+                        api_key=os.getenv("GITHUB_TOKEN"),
+                        base_url="https://models.inference.ai.azure.com",
+                        temperature=0.2,
+                    )
         self.system_prompt = system_prompt or SystemMessage(
             "You are a Risk Analysis agent. "
             "Analyze startup ideas or operations using SWOT (Strengths, Weaknesses, Opportunities, Threats) and generate future scenarios. "
@@ -78,3 +96,33 @@ class SWOTAnalyzerAgentConfig:
             "Include recommended steps to mitigate risks and leverage opportunities."
         )
         self.response_format = ToolStrategy(SWOTAnalyzerAgentOutput)
+
+
+
+
+
+class OrchestratorAgentOutput(BaseModel):
+    pass
+
+
+class OrchestratorAgentConfig:
+    def __init__(self,model=None,system_prompt=None,validation_onfig=None,swot_config=None,legal_config=None):
+        self.validation_onfig=IdeaValidationAgentConfig()
+        self.swot_config=SWOTAnalyzerAgentConfig()
+        self.legal_config=LegalAgentConfig()
+        self.model=ChatOpenAI(
+                        model="gpt-4o",
+                        api_key=os.getenv("GITHUB_TOKEN"),
+                        base_url="https://models.inference.ai.azure.com",
+                        temperature=0.2,
+                    )
+        self.system_prompt= SystemMessage(
+    "You are an Orchestrator Agent overseeing startup evaluation and risk management. "
+    "Your role is to coordinate sub-agents for comprehensive analysis. "
+    "You have access to three sub-agents: "
+    "1. Idea Validation Agent :  assesses market potential, competition, and risks; "
+    "2. Legal Agent  : analyzes legal risks and provides actionable steps; "
+    "3. SWOT Analyzer Agent : identifies strengths, weaknesses, opportunities, threats, and future scenarios. "
+    "Always return concise, structured output combining all sub-agent analyses. "
+    "Use the provided tools to call sub-agents when needed."
+)
