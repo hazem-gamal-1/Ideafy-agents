@@ -1,12 +1,9 @@
 from langchain.agents import create_agent
 from langchain.tools import tool
 from dotenv import load_dotenv
-from config import IdeaValidationAgentConfig
 from langchain.messages import HumanMessage
 from langchain.agents.middleware import HumanInTheLoopMiddleware
 from langgraph.checkpoint.memory import InMemorySaver
-from langchain_openai import ChatOpenAI
-import os
 from langgraph.types import Command
 load_dotenv()
 
@@ -68,13 +65,3 @@ class IdeaValidationAgent:
         return f"{competitors}"
 
 
-if __name__ == "__main__":
-    config=IdeaValidationAgentConfig(model=ChatOpenAI(
-    model="gpt-4o",
-    api_key=os.getenv("GITHUB_TOKEN"),
-    base_url="https://models.inference.ai.azure.com",
-    temperature=0.2,
-    ))
-    agent = IdeaValidationAgent(config)
-    agent.validate_idea("my start up idea is car washer")
-    

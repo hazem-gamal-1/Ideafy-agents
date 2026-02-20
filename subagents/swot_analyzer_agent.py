@@ -1,9 +1,6 @@
 from langchain.agents import create_agent
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain.messages import HumanMessage
-from config import SWOTAnalyzerAgentConfig
-from langchain_openai import ChatOpenAI
-import os
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -27,14 +24,3 @@ class SWOTAnalyzerAgent:
 
 
 
-
-if __name__ == "__main__":
-    config=SWOTAnalyzerAgentConfig(model=ChatOpenAI(
-    model="gpt-4o",
-    api_key=os.getenv("GITHUB_TOKEN"),
-    base_url="https://models.inference.ai.azure.com",
-    temperature=0.2,
-    ))
-    agent = SWOTAnalyzerAgent(config)
-    result=agent.run_scenario_analysis("my start up idea is car washer")
-    print(result)

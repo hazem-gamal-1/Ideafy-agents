@@ -1,9 +1,6 @@
 from langchain.agents import create_agent
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain.messages import HumanMessage
-from config import LegalAgentConfig
-from langchain_openai import ChatOpenAI
-import os
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -26,15 +23,3 @@ class LegalAgent:
 
 
 
-
-
-if __name__ == "__main__":
-    config=LegalAgentConfig(model=ChatOpenAI(
-    model="gpt-4o",
-    api_key=os.getenv("GITHUB_TOKEN"),
-    base_url="https://models.inference.ai.azure.com",
-    temperature=0.2,
-    ))
-    agent = LegalAgent(config)
-    result=agent.analyze_legal_risks("my start up idea is car washer")
-    print(result)
