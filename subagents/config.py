@@ -102,7 +102,12 @@ class SWOTAnalyzerAgentConfig:
 
 
 class OrchestratorAgentOutput(BaseModel):
-    pass
+    idea_validation: IdeaValidationOutput
+    legal_analysis: LegalAgentOutput
+    swot_analysis: SWOTAnalyzerAgentOutput
+    overall_summary: str = Field(
+        description="Concise, unified summary combining all sub-agent insights"
+    )
 
 
 class OrchestratorAgentConfig:
@@ -117,12 +122,14 @@ class OrchestratorAgentConfig:
                         temperature=0.2,
                     )
         self.system_prompt= SystemMessage(
-    "You are an Orchestrator Agent overseeing startup evaluation and risk management. "
-    "Your role is to coordinate sub-agents for comprehensive analysis. "
-    "You have access to three sub-agents: "
-    "1. Idea Validation Agent :  assesses market potential, competition, and risks; "
-    "2. Legal Agent  : analyzes legal risks and provides actionable steps; "
-    "3. SWOT Analyzer Agent : identifies strengths, weaknesses, opportunities, threats, and future scenarios. "
-    "Always return concise, structured output combining all sub-agent analyses. "
-    "Use the provided tools to call sub-agents when needed."
-)
+                                "You are an Orchestrator Agent overseeing startup evaluation and risk management. "
+                                "Your role is to coordinate sub-agents for comprehensive analysis. "
+                                "You have access to three sub-agents: "
+                                "1. Idea Validation Agent :  assesses market potential, competition, and risks; "
+                                "2. Legal Agent  : analyzes legal risks and provides actionable steps; "
+                                "3. SWOT Analyzer Agent : identifies strengths, weaknesses, opportunities, threats, and future scenarios. "
+                                "Always return concise, structured output combining all sub-agent analyses. "
+                                "Use the provided tools to call sub-agents when needed."
+                            )
+        self.response_format=ToolStrategy(OrchestratorAgentOutput)
+                                    
