@@ -53,7 +53,7 @@ class IdeaValidationAgent:
             decisions.append({"type":"edit","edited_action":{"name":action["name"],"args":{key:value}}})
 
         final_result=self._main_agent.invoke(Command(resume={"decisions":decisions}),config=config)
-        return final_result 
+        return final_result['structured_response']
 
     @staticmethod
     @tool

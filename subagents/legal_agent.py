@@ -22,7 +22,7 @@ class LegalAgent:
         result=self._main_agent.invoke(
             {"messages": [HumanMessage(f"my idea {user_prompt}")]}, config
         )
-        return result
+        return result['structured_response']
 
 
 
