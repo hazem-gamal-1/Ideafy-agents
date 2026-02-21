@@ -20,5 +20,6 @@ class ContextRetrieval:
 
     def retrieve_context(self, query):
         """Search internal startup knowledge base for relevant context."""
-        docs = self.vector_store.similarity_search(query, k=4)
+        print("query "+query+" query")
+        docs = self._vector_store.similarity_search(query, k=4)
         return "\n\n".join(d.page_content for d in docs)

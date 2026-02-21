@@ -25,10 +25,11 @@ class IdeaValidationAgentConfig:
             temperature=0.2,
         )
         self.system_prompt = system_prompt or SystemMessage(
-            "You are an idea validation agent"
-            "Return concise, structured output only."
-            "you can use provided tools to check market trends and competitors"
-            "You must use the retrieve_context tool to retrieve relevant context before generating the final answer."
+            "You are the Idea Validation Agent. Your task is to evaluate startup ideas for market potential, competition, and risks. "
+            "Before generating your structured output, first determine exactly what information you need from the startup knowledge base (market trends, competitors, risks) to answer this query. "
+            "Then retrieve relevant context using the 'retrieve_context' tool. "
+            "Finally, return ONLY JSON following the IdeaValidationOutput schema. "
+            "Do not include explanations, commentary, or any text outside the JSON."
         )
 
         self.response_format = ToolStrategy(IdeaValidationOutput)
@@ -51,10 +52,11 @@ class LegalAgentConfig:
             temperature=0.2,
         )
         self.system_prompt = system_prompt or SystemMessage(
-            "You are a legal analysis agent. "
-            "Return concise, structured output only. "
-            "For each legal risk, suggest actionable steps to mitigate or resolve it."
-            "You must use the retrieve_context tool to retrieve relevant context before generating the final answer."
+            "You are the Legal Analysis Agent. Your task is to identify the top legal risks for a startup and provide actionable steps. "
+            "Before generating output, first decide exactly what laws, regulations, or compliance context you need to retrieve to make an informed legal assessment. "
+            "Use the 'retrieve_context' tool to gather this information. "
+            "Then return ONLY JSON following the LegalAgentOutput schema. "
+            "Do not include any text outside the JSON."
         )
         self.response_format = ToolStrategy(LegalAgentOutput)
 
@@ -89,11 +91,11 @@ class SWOTAnalyzerAgentConfig:
             temperature=0.2,
         )
         self.system_prompt = system_prompt or SystemMessage(
-            "You are a Risk Analysis agent. "
-            "Analyze startup ideas or operations using SWOT (Strengths, Weaknesses, Opportunities, Threats) and generate future scenarios. "
-            "Return concise, structured output only. "
-            "Include recommended steps to mitigate risks and leverage opportunities."
-            "You must use the retrieve_context tool to retrieve relevant context before generating the final answer."
+            "You are the SWOT Analyzer Agent. Your task is to analyze strengths, weaknesses, opportunities, threats, and future scenarios for a startup. "
+            "Before generating your response, first identify exactly what market, competitor, and operational information you need from the knowledge base. "
+            "Use the 'retrieve_context' tool to collect this information. "
+            "Then return ONLY JSON following the SWOTAnalyzerAgentOutput schema. "
+            "Do not include explanations, commentary, or text outside the JSON."
         )
         self.response_format = ToolStrategy(SWOTAnalyzerAgentOutput)
 
@@ -128,15 +130,14 @@ class OrchestratorAgentConfig:
             temperature=0.2,
         )
         self.system_prompt = SystemMessage(
-            "You are an Orchestrator Agent overseeing startup evaluation and risk management. "
-            "Your role is to coordinate sub-agents for comprehensive analysis. "
-            "You have access to three sub-agents: "
-            "1. Idea Validation Agent :  assesses market potential, competition, and risks; "
-            "2. Legal Agent  : analyzes legal risks and provides actionable steps; "
-            "3. SWOT Analyzer Agent : identifies strengths, weaknesses, opportunities, threats, and future scenarios. "
-            "Always return concise, structured output combining all sub-agent analyses. "
-            "Use the provided tools to call sub-agents when needed."
-            "You must use the retrieve_context tool to retrieve relevant context before generating the final answer."
+            "You are the Orchestrator Agent. Your role is to coordinate three sub-agents: Idea Validation, Legal Analysis, and SWOT Analysis. "
+            "For each sub-agent, follow these steps: "
+            "1) Let the sub-agent determine what context it needs to answer the query. "
+            "2) Use the 'retrieve_context' tool to provide relevant information. "
+            "3) Have the sub-agent generate its structured JSON output. "
+            "After collecting all sub-agent outputs, combine them into a single JSON with keys: idea_validation, legal_analysis, swot_analysis, overall_summary. "
+            "Return ONLY JSON following the OrchestratorAgentOutput schema. "
+            "Do not add explanations, commentary, or any text outside the JSON."
         )
         self.response_format = ToolStrategy(OrchestratorAgentOutput)
         self.file_path = file_path

@@ -40,22 +40,24 @@ class IdeaValidationAgent:
         result = self._agent.invoke({"messages": [HumanMessage(f"{prompt}")]}, config)
 
         decisions = []
+        if "__interrupt__" in result:
+            for action in result["__interrupt__"][0].value["action_requests"]:
+                print(action["name"])
+                value = input(f"{action["description"]} ")
+                key, _ = next(iter(action["args"].items()))
+                decisions.append(
+                    {
+                        "type": "edit",
+                        "edited_action": {"name": action["name"], "args": {key: value}},
+                    }
+                )
 
-        for action in result["__interrupt__"][0].value["action_requests"]:
-            print(action["name"])
-            value = input(f"{action["description"]} ")
-            key, _ = next(iter(action["args"].items()))
-            decisions.append(
-                {
-                    "type": "edit",
-                    "edited_action": {"name": action["name"], "args": {key: value}},
-                }
+            final_result = self._agent.invoke(
+                Command(resume={"decisions": decisions}), config=config
             )
-
-        final_result = self._agent.invoke(
-            Command(resume={"decisions": decisions}), config=config
-        )
-        return final_result["structured_response"]
+            return final_result["structured_response"]
+        else :
+            return result
 
     @staticmethod
     @tool

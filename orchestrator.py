@@ -63,7 +63,7 @@ class OrchestratorAgent:
 if __name__ == "__main__":
     result = OrchestratorAgent(
         OrchestratorAgentConfig(
-            file_path="E:\Langchain-projects\StartAI\EcoWash_Startup_Idea.pdf",
+            file_path=r"E:\Langchain-projects\StartAI\EcoWash_Startup_Idea.pdf",
             thread_id="th123",
         )
     ).run("Mobile Sustainable Car Wash")
