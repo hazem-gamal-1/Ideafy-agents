@@ -28,6 +28,7 @@ class IdeaValidationAgentConfig:
             "You are an idea validation agent"
             "Return concise, structured output only."
             "you can use provided tools to check market trends and competitors"
+            "You must use the retrieve_context tool to retrieve relevant context before generating the final answer."
         )
 
         self.response_format = ToolStrategy(IdeaValidationOutput)
@@ -53,6 +54,7 @@ class LegalAgentConfig:
             "You are a legal analysis agent. "
             "Return concise, structured output only. "
             "For each legal risk, suggest actionable steps to mitigate or resolve it."
+            "You must use the retrieve_context tool to retrieve relevant context before generating the final answer."
         )
         self.response_format = ToolStrategy(LegalAgentOutput)
 
@@ -91,6 +93,7 @@ class SWOTAnalyzerAgentConfig:
             "Analyze startup ideas or operations using SWOT (Strengths, Weaknesses, Opportunities, Threats) and generate future scenarios. "
             "Return concise, structured output only. "
             "Include recommended steps to mitigate risks and leverage opportunities."
+            "You must use the retrieve_context tool to retrieve relevant context before generating the final answer."
         )
         self.response_format = ToolStrategy(SWOTAnalyzerAgentOutput)
 
@@ -133,6 +136,7 @@ class OrchestratorAgentConfig:
             "3. SWOT Analyzer Agent : identifies strengths, weaknesses, opportunities, threats, and future scenarios. "
             "Always return concise, structured output combining all sub-agent analyses. "
             "Use the provided tools to call sub-agents when needed."
+            "You must use the retrieve_context tool to retrieve relevant context before generating the final answer."
         )
         self.response_format = ToolStrategy(OrchestratorAgentOutput)
         self.file_path = file_path
