@@ -15,11 +15,13 @@ load_dotenv()
 class OrchestratorAgent:
     def __init__(self, config):
         self._config = config
-        self._retrieval = ContextRetrieval(self._config.file_path)
+        self._retrieve_context_tool = ContextRetrieval(
+            self._config.file_path
+        ).retrieve_context
         self._orchestrator_agent = create_agent(
             model=self._config.model,
             tools=[
-                tool(self._retrieval.retrieve_context),
+                tool(self._retrieve_context_tool),
                 tool(self._run_idea_validation_agent),
                 tool(self._run_swot_analyzer_agent),
                 tool(self._run_legal_agent),
@@ -28,9 +30,15 @@ class OrchestratorAgent:
             response_format=self._config.response_format,
             checkpointer=InMemorySaver(),
         )
-        self._idea_validation_agent = IdeaValidationAgent(self._config.validation_onfig)
-        self._legal_agent = LegalAgent(self._config.legal_config)
-        self._swot_agent = SWOTAnalyzerAgent(self._config.swot_config)
+        self._idea_validation_agent = IdeaValidationAgent(
+            self._config.validation_onfig, self._retrieve_context_tool
+        )
+        self._legal_agent = LegalAgent(
+            self._config.legal_config, self._retrieve_context_tool
+        )
+        self._swot_agent = SWOTAnalyzerAgent(
+            self._config.swot_config, self._retrieve_context_tool
+        )
 
     def _run_idea_validation_agent(self, prompt):
         """Run the Idea Validation Agent."""
@@ -54,6 +62,9 @@ class OrchestratorAgent:
 
 if __name__ == "__main__":
     result = OrchestratorAgent(
-        OrchestratorAgentConfig(file_path="2", thread_id="1")
-    ).run("car washing")
+        OrchestratorAgentConfig(
+            file_path="E:\Langchain-projects\StartAI\EcoWash_Startup_Idea.pdf",
+            thread_id="th123",
+        )
+    ).run("Mobile Sustainable Car Wash")
     print(result)
