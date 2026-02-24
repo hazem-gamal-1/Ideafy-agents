@@ -1,12 +1,15 @@
 import uuid
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, Query
 from utils.config import IdeaValidationAgentConfig, OrchestratorAgentConfig
-from orchestrator import OrchestratorAgent
+from api.orchestrator import OrchestratorAgent
 
 app = FastAPI()
 
+
 @app.post("/analyze")
-async def run(file: UploadFile, prompt: str, actions: str):
+async def run(
+    file: UploadFile, prompt: str = Query(...), actions: list[str] = Query(...)
+):
     file_bytes = await file.read()
     thread_id = str(uuid.uuid4())
     validation_config = IdeaValidationAgentConfig(actions=actions)
@@ -16,4 +19,4 @@ async def run(file: UploadFile, prompt: str, actions: str):
         )
     )
     result = orchestrator.run(prompt)
-    return {"result":result}
+    return {"result": result}
