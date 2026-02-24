@@ -113,11 +113,11 @@ class OrchestratorAgentConfig:
         thread_id,
         model=None,
         system_prompt=None,
-        validation_onfig=None,
+        validation_config=None,
         swot_config=None,
         legal_config=None,
     ):
-        self.validation_onfig = validation_onfig | IdeaValidationAgentConfig()
+        self.validation_config = validation_config | IdeaValidationAgentConfig()
         self.swot_config = swot_config | SWOTAnalyzerAgentConfig()
         self.legal_config = legal_config | LegalAgentConfig()
         self.model = model | ChatOpenAI(
