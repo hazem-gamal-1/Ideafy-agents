@@ -41,9 +41,11 @@ class IdeaValidationAgent:
 
         decisions = []
         if "__interrupt__" in result:
-            for action in result["__interrupt__"][0].value["action_requests"]:
-                print(action["name"])
-                value = input(f"{action["description"]} ")
+            for action, value in zip(
+                result["__interrupt__"][0].value["action_requests"],
+                self._config.actions,
+            ):
+                print(action["name"], value)
                 key, _ = next(iter(action["args"].items()))
                 decisions.append(
                     {
@@ -56,7 +58,7 @@ class IdeaValidationAgent:
                 Command(resume={"decisions": decisions}), config=config
             )
             return final_result["structured_response"]
-        else :
+        else:
             return result
 
     @staticmethod

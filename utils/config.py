@@ -13,11 +13,7 @@ class IdeaValidationOutput(BaseModel):
 
 
 class IdeaValidationAgentConfig:
-    def __init__(
-        self,
-        model=None,
-        system_prompt=None,
-    ):
+    def __init__(self, model=None, system_prompt=None, actions=None):
         self.model = model or ChatOpenAI(
             model="gpt-4o",
             api_key=os.getenv("GITHUB_TOKEN"),
@@ -33,6 +29,7 @@ class IdeaValidationAgentConfig:
         )
 
         self.response_format = ToolStrategy(IdeaValidationOutput)
+        self.actions = actions
 
 
 class LegalAgentOutput(BaseModel):
@@ -112,7 +109,7 @@ class OrchestratorAgentOutput(BaseModel):
 class OrchestratorAgentConfig:
     def __init__(
         self,
-        file_path,
+        file_bytes,
         thread_id,
         model=None,
         system_prompt=None,
@@ -120,16 +117,16 @@ class OrchestratorAgentConfig:
         swot_config=None,
         legal_config=None,
     ):
-        self.validation_onfig = IdeaValidationAgentConfig()
-        self.swot_config = SWOTAnalyzerAgentConfig()
-        self.legal_config = LegalAgentConfig()
-        self.model = ChatOpenAI(
+        self.validation_onfig = validation_onfig | IdeaValidationAgentConfig()
+        self.swot_config = swot_config | SWOTAnalyzerAgentConfig()
+        self.legal_config = legal_config | LegalAgentConfig()
+        self.model = model | ChatOpenAI(
             model="gpt-4o",
             api_key=os.getenv("GITHUB_TOKEN"),
             base_url="https://models.inference.ai.azure.com",
             temperature=0.2,
         )
-        self.system_prompt = SystemMessage(
+        self.system_prompt = system_prompt | SystemMessage(
             "You are the Orchestrator Agent. Your role is to coordinate three sub-agents: Idea Validation, Legal Analysis, and SWOT Analysis. "
             "For each sub-agent, follow these steps: "
             "1) Let the sub-agent determine what context it needs to answer the query. "
@@ -140,5 +137,5 @@ class OrchestratorAgentConfig:
             "Do not add explanations, commentary, or any text outside the JSON."
         )
         self.response_format = ToolStrategy(OrchestratorAgentOutput)
-        self.file_path = file_path
+        self.file_bytes = file_bytes
         self.thread_id = thread_id
