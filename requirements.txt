@@ -6,4 +6,6 @@ langchain
 python-dotenv
 chromadb
 langchain_chroma
-langchain_openai 
+langchain_openai
+fastapi[standard]
+uvicorn
