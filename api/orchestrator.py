@@ -3,11 +3,11 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langchain.messages import HumanMessage
 from dotenv import load_dotenv
 from langchain.tools import tool
-from config import OrchestratorAgentConfig
+from utils.config import OrchestratorAgentConfig
 from subagents.idea_validation_agent import IdeaValidationAgent
 from subagents.legal_agent import LegalAgent
 from subagents.swot_analyzer_agent import SWOTAnalyzerAgent
-from utils import ContextRetrieval
+from utils.utils import ContextRetrieval
 
 load_dotenv()
 
