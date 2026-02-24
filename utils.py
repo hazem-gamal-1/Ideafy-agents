@@ -3,12 +3,17 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 import os
+import tempfile
 
 
 class ContextRetrieval:
-    def __init__(self, file_path):
-        loader = PyPDFLoader(file_path)
+    def __init__(self, file_bytes: bytes):
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+            tmp.write(file_bytes)
+            tmp_path = tmp.name
+        loader = PyPDFLoader(tmp_path)
         docs = loader.load()
+        os.unlink(tmp_path)
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=30)
         all_splits = text_splitter.split_documents(docs)
         embedding_function = OpenAIEmbeddings(
