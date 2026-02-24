@@ -1,7 +1,8 @@
 from langchain_chroma import Chroma
-from langchain_ollama import OllamaEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings
+import os
 
 
 class ContextRetrieval:
@@ -10,16 +11,18 @@ class ContextRetrieval:
         docs = loader.load()
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=30)
         all_splits = text_splitter.split_documents(docs)
-        embedding_function = OllamaEmbeddings(model="nomic-embed-text:latest")
+        embedding_function = OpenAIEmbeddings(
+            model="text-embedding-3-small",
+            api_key=os.getenv("GITHUB_TOKEN"),
+            base_url="https://models.inference.ai.azure.com",
+        )
         self._vector_store = Chroma(
             collection_name="my_first_collection",
             embedding_function=embedding_function,
-            persist_directory="./chroma_langchain_db",
         )
         self._vector_store.add_documents(documents=all_splits)
 
     def retrieve_context(self, query):
         """Search internal startup knowledge base for relevant context."""
-        print("query "+query+" query")
         docs = self._vector_store.similarity_search(query, k=4)
         return "\n\n".join(d.page_content for d in docs)
