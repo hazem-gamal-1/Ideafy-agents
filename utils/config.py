@@ -117,16 +117,16 @@ class OrchestratorAgentConfig:
         swot_config=None,
         legal_config=None,
     ):
-        self.validation_config = validation_config | IdeaValidationAgentConfig()
-        self.swot_config = swot_config | SWOTAnalyzerAgentConfig()
-        self.legal_config = legal_config | LegalAgentConfig()
-        self.model = model | ChatOpenAI(
+        self.validation_config = validation_config or IdeaValidationAgentConfig()
+        self.swot_config = swot_config or SWOTAnalyzerAgentConfig()
+        self.legal_config = legal_config or LegalAgentConfig()
+        self.model = model or ChatOpenAI(
             model="gpt-4o",
             api_key=os.getenv("GITHUB_TOKEN"),
             base_url="https://models.inference.ai.azure.com",
             temperature=0.2,
         )
-        self.system_prompt = system_prompt | SystemMessage(
+        self.system_prompt = system_prompt or SystemMessage(
             "You are the Orchestrator Agent. Your role is to coordinate three sub-agents: Idea Validation, Legal Analysis, and SWOT Analysis. "
             "For each sub-agent, follow these steps: "
             "1) Let the sub-agent determine what context it needs to answer the query. "

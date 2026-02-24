@@ -3,11 +3,11 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langchain.messages import HumanMessage
 from dotenv import load_dotenv
 from langchain.tools import tool
-from ..utils.config import OrchestratorAgentConfig
-from ..subagents.idea_validation_agent import IdeaValidationAgent
-from ..subagents.legal_agent import LegalAgent
-from ..subagents.swot_analyzer_agent import SWOTAnalyzerAgent
-from ..utils.utils import ContextRetrieval
+from utils.config import OrchestratorAgentConfig
+from subagents.idea_validation_agent import IdeaValidationAgent
+from subagents.legal_agent import LegalAgent
+from subagents.swot_analyzer_agent import SWOTAnalyzerAgent
+from utils.utils import ContextRetrieval
 
 load_dotenv()
 
@@ -16,7 +16,7 @@ class OrchestratorAgent:
     def __init__(self, config):
         self._config = config
         self._retrieve_context_tool = ContextRetrieval(
-            self._config.file_path
+            self._config.file_bytes
         ).retrieve_context
         self._orchestrator_agent = create_agent(
             model=self._config.model,
@@ -31,7 +31,7 @@ class OrchestratorAgent:
             checkpointer=InMemorySaver(),
         )
         self._idea_validation_agent = IdeaValidationAgent(
-            self._config.validation_onfig, self._retrieve_context_tool
+            self._config.validation_config, self._retrieve_context_tool
         )
         self._legal_agent = LegalAgent(
             self._config.legal_config, self._retrieve_context_tool

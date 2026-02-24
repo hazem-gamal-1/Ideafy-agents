@@ -5,9 +5,7 @@ from orchestrator import OrchestratorAgent
 
 app = FastAPI()
 
-app.post("/analyze")
-
-
+@app.post("/analyze")
 async def run(file: UploadFile, prompt: str, actions: str):
     file_bytes = await file.read()
     thread_id = str(uuid.uuid4())
@@ -18,4 +16,4 @@ async def run(file: UploadFile, prompt: str, actions: str):
         )
     )
     result = orchestrator.run(prompt)
-    return result
+    return {"result":result}
