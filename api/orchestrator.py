@@ -3,7 +3,6 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langchain.messages import HumanMessage
 from dotenv import load_dotenv
 from langchain.tools import tool
-from utils.config import OrchestratorAgentConfig
 from subagents.idea_validation_agent import IdeaValidationAgent
 from subagents.legal_agent import LegalAgent
 from subagents.swot_analyzer_agent import SWOTAnalyzerAgent
@@ -52,19 +51,18 @@ class OrchestratorAgent:
         """Run the SWOT Analyzer Agent to assess strategic positioning."""
         return self._swot_agent.run_scenario_analysis(prompt, self._config.thread_id)
 
-    def run(self, prompt):
+    def invoke(self, prompt):
         config = {"configurable": {"thread_id": self._config.thread_id}}
         result = self._orchestrator_agent.invoke(
             {"messages": [HumanMessage(f"{prompt}")]}, config
         )
-        return result["structured_response"]
+        return result
 
-
-if __name__ == "__main__":
-    result = OrchestratorAgent(
-        OrchestratorAgentConfig(
-            file_path=r"E:\Langchain-projects\StartAI\EcoWash_Startup_Idea.pdf",
-            thread_id="th123",
-        )
-    ).run("Mobile Sustainable Car Wash")
-    print(result)
+    async def stream(self, prompt):
+        config = {"configurable": {"thread_id": self._config.thread_id}}
+        async for step, data in self._orchestrator_agent.stream(
+            {"messages": [HumanMessage(f"{prompt}")]},
+            config,
+            stream_mode="updates",
+        ):
+            yield step, data
