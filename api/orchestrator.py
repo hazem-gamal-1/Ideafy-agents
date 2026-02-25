@@ -58,11 +58,12 @@ class OrchestratorAgent:
         )
         return result
 
-    async def stream(self, prompt):
+    def stream(self, prompt):
         config = {"configurable": {"thread_id": self._config.thread_id}}
-        async for step, data in self._orchestrator_agent.stream(
+        for chunk in self._orchestrator_agent.stream(
             {"messages": [HumanMessage(f"{prompt}")]},
             config,
             stream_mode="updates",
         ):
-            yield step, data
+            for step, data in chunk.items():
+                yield step, data

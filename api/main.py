@@ -21,8 +21,8 @@ async def run(
         )
     )
 
-    async def stream_result():
-        async for step, data in orchestrator.stream(prompt):
+    def stream_result():
+        for step, data in orchestrator.stream(prompt):
             # Convert content_blocks into strings
             content_blocks = data["messages"][-1].content_blocks
             for block in content_blocks:
