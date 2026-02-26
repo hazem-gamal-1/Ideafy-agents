@@ -52,14 +52,14 @@ class OrchestratorAgent:
         return self._swot_agent.run_scenario_analysis(prompt, self._config.thread_id)
 
     def invoke(self, prompt):
-        config = {"configurable": {"thread_id": self._config.thread_id}}
+        config = {"configurable": {"thread_id": self._config.thread_id}, "max_concurrency": 1}
         result = self._orchestrator_agent.invoke(
             {"messages": [HumanMessage(f"{prompt}")]}, config
         )
         return result
 
     def stream(self, prompt):
-        config = {"configurable": {"thread_id": self._config.thread_id}}
+        config = {"configurable": {"thread_id": self._config.thread_id}, "max_concurrency": 1}
         for chunk in self._orchestrator_agent.stream(
             {"messages": [HumanMessage(f"{prompt}")]},
             config,

@@ -15,6 +15,6 @@ class LegalAgent:
         )
 
     def analyze_legal_risks(self, prompt, thread_id="default"):
-        config = {"configurable": {"thread_id": thread_id}}
+        config = {"configurable": {"thread_id": thread_id}, "max_concurrency": 1}
         result = self._agent.invoke({"messages": [HumanMessage(f"{prompt}")]}, config)
         return result["structured_response"]
