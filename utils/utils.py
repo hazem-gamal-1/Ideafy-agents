@@ -28,6 +28,9 @@ class ContextRetrieval:
         self._vector_store.add_documents(documents=all_splits)
 
     def retrieve_context(self, query):
-        """Search internal startup knowledge base for relevant context."""
+        """
+        Search internal startup knowledge base for relevant context.
+        Ensures query is a string before calling similarity_search.
+        """
         docs = self._vector_store.similarity_search(query, k=4)
         return "\n\n".join(d.page_content for d in docs)
