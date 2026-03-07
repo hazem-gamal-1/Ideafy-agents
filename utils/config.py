@@ -18,7 +18,7 @@ class IdeaValidationAgentConfig:
             model="gpt-4o",
             api_key=os.getenv("GITHUB_TOKEN"),
             base_url="https://models.inference.ai.azure.com",
-            temperature=0.2,
+            temperature=0.5,
         )
         self.system_prompt = system_prompt or SystemMessage(
             "You are the Idea Validation Agent. "
@@ -46,7 +46,7 @@ class LegalAgentConfig:
             model="gpt-4o",
             api_key=os.getenv("GITHUB_TOKEN"),
             base_url="https://models.inference.ai.azure.com",
-            temperature=0.2,
+            temperature=0.5,
         )
         self.system_prompt = system_prompt or SystemMessage(
             "You are the Legal Analysis Agent. "
@@ -85,7 +85,7 @@ class SWOTAnalyzerAgentConfig:
             model="gpt-4o",
             api_key=os.getenv("GITHUB_TOKEN"),
             base_url="https://models.inference.ai.azure.com",
-            temperature=0.2,
+            temperature=0.5,
         )
         self.system_prompt = system_prompt or SystemMessage(
             "You are the SWOT Analyzer Agent. "
@@ -124,7 +124,7 @@ class OrchestratorAgentConfig:
             model="gpt-4o",
             api_key=os.getenv("GITHUB_TOKEN"),
             base_url="https://models.inference.ai.azure.com",
-            temperature=0.2,
+            temperature=0.5,
         )
         self.system_prompt = system_prompt or SystemMessage(
             "You are the Orchestrator Agent. "
